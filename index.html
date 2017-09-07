@@ -4,10 +4,10 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Docker CrashCourse</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/moon.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -24,8 +24,140 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h2>Docker Crashcourse</h2>
+					<h3>Mark Delos Santos</h3>
+				</section>
+				<section>
+					<section><h1>Survey</h1></section>
+					<section>
+						<h2>Linux environments?</h2>
+						<p>linux Shell commands (greping, piping etc)</p>
+					</section>
+					<section>
+						<h2>Virtual Machines?</h2>
+						<p>the Concept of virtual machines, VM technologies like
+							VirtualBox and the like...
+						</p>
+					</section>	
+				</section>
+				<section>
+					<section>
+						<h1>Expectations</h1>
+						<p class="fragment">For you and me both...</p>
+					</section>
+					<section>
+						<h2>You will understand the role of Docker</h2>
+						<p class="fragment">Development/R&D</p>
+						<p class="fragment">Production</p>
+					</section>
+					<section>
+						<h2>You would know how to operate in Docker</h2>
+						<p class="fragment">or at least, know when to start...</p>
+					</section>
+					<section>
+						<h1>Think about DevOps</h1>
+					</section>
+				</section>
+				<section>
+					<section>
+						<img data-src="https://upload.wikimedia.org/wikipedia/commons/7/79/Docker_%28container_engine%29_logo.png"/>
+					</section>
+					<section>
+						<p>
+							Is a platform where you can manage multiple small and portable "machines" called containers
+							and make them interoperate with each other in a virtually sandboxed fashion...
+						</p>
+					</section>
+					<section>
+						<img data-src="https://docs.docker.com/engine/userguide/networking/images/bridge_network.png"/>
+					</section>
+					<section>
+						<h3>
+							Containers vs VMs
+						</h3>
+						<table>
+							<thead>
+									<tr>
+										<th>VM</th>
+										<th>Containers</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Slow startup (due to tons of libs)</td>
+										<td>Fast startup (just the libs it needs for CLI interaction)</td>
+									</tr>
+									<tr>
+										<td>Hypervisor (VirtualBox, VMWare, QEMU etc)</td>
+										<td>Docker Daemon</td>
+									</tr>
+									<tr>
+										<td>Intricate startup configurations</td>
+										<td>Controlled via small text files Dockerfiles</td>
+									</tr>
+									<tr>
+										<td>Complicated machine setups</td>
+										<td>One preferred "marketplace", 
+											<a target="_blank" href="https://hub.docker.com/"/>Dockerhub</a></td>
+									</tr>
+								</tbody>
+						</table>
+					</section>
+					<section>
+						<img data-src="https://regmedia.co.uk/2015/01/07/docker_vs_vmware.jpg"/>
+					</section>
+				</section>
+				<section>
+					<section><h1>Terminologies</h1></section>
+					<section>
+						<h1>Image</h1>
+						<p>
+							<ul>
+								<li>
+									A small linux machine "blueprint" for containers
+								</li>
+								<li>
+									normally alpinelinux, but can be ubuntu or debian variants
+								</li>
+								<li>
+									Defined by a Dockerfile
+								</li>
+								<li>
+									Comes pre-installed with the libs and apps you 
+									<a target="_blank" href="https://hub.docker.com/_/node/"/>need</a>
+								</li>
+							</ul>
+						</p>
+					</section>
+					<section>
+						<h2>Dockerfile</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+FROM node:alpine
+MAINTAINER ferdinand.nana@nokia.com
+
+RUN apk update && apk add bash vim
+
+RUN mkdir /app
+COPY my_project /app
+
+ENTRYPOINT node /app/index.js
+						</code></pre>
+					</section>
+					<section>
+						<h1>Container</h1>
+						<p>
+							<ul>
+								<li>A running image</li>
+								<li>You can spawn a new container from an image</li>
+								<li>You can stop, restart and delete containers at will</li>
+								<li>Containers are "networked"</li>
+							</ul>
+						</p>
+					</section>
+				</section>
+				<section><h1>DEMO_1</h1></section>
+
 			</div>
 		</div>
 
