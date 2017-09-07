@@ -39,7 +39,7 @@
 						<p>the Concept of virtual machines, VM technologies like
 							VirtualBox and the like...
 						</p>
-					</section>	
+					</section>
 				</section>
 				<section>
 					<section>
@@ -78,27 +78,27 @@
 						</h3>
 						<table>
 							<thead>
-									<tr>
+									<tr class="fragment">
 										<th>VM</th>
 										<th>Containers</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
+									<tr class="fragment">
 										<td>Slow startup (due to tons of libs)</td>
 										<td>Fast startup (just the libs it needs for CLI interaction)</td>
 									</tr>
-									<tr>
+									<tr class="fragment">
 										<td>Hypervisor (VirtualBox, VMWare, QEMU etc)</td>
 										<td>Docker Daemon</td>
 									</tr>
-									<tr>
+									<tr class="fragment">
 										<td>Intricate startup configurations</td>
 										<td>Controlled via small text files Dockerfiles</td>
 									</tr>
-									<tr>
+									<tr class="fragment">
 										<td>Complicated machine setups</td>
-										<td>One preferred "marketplace", 
+										<td>One preferred "marketplace",
 											<a target="_blank" href="https://hub.docker.com/"/>Dockerhub</a></td>
 									</tr>
 								</tbody>
@@ -114,17 +114,17 @@
 						<h1>Image</h1>
 						<p>
 							<ul>
-								<li>
+								<li class="fragment">
 									A small linux machine "blueprint" for containers
 								</li>
-								<li>
+								<li class="fragment">
 									normally alpinelinux, but can be ubuntu or debian variants
 								</li>
-								<li>
+								<li class="fragment">
 									Defined by a Dockerfile
 								</li>
-								<li>
-									Comes pre-installed with the libs and apps you 
+								<li class="fragment">
+									Comes pre-installed with the libs and apps you
 									<a target="_blank" href="https://hub.docker.com/_/node/"/>need</a>
 								</li>
 							</ul>
@@ -148,19 +148,149 @@ ENTRYPOINT node /app/index.js
 						<h1>Container</h1>
 						<p>
 							<ul>
-								<li>A running image</li>
-								<li>You can spawn a new container from an image</li>
-								<li>You can stop, restart and delete containers at will</li>
-								<li>Containers are "networked"</li>
+								<li class="fragment">A running image</li>
+								<li class="fragment">You can spawn a new container from an image</li>
+								<li class="fragment">You can stop, restart and delete containers at will</li>
+								<li class="fragment">Containers are "networked"</li>
 							</ul>
 						</p>
 					</section>
 				</section>
 				<section><h1>DEMO_1</h1></section>
+				<section>
+					<section>
+						<h1>Highlights</h1>
+					</section>
+					<section>
+						<p>Most docker interactions can be accessed via the 'docker' command</p>
+						<pre><code class="hljs" data-trim contenteditable>
+docker ps
+						</code></pre>
+					</section>
+					<section>
+						<p>Containers are essentially running computers, so you can "ssh" to them or make them execute outside of their main entrypoints (provided they are running)</p>
+						<pre><code class="hljs" data-trim contenteditable>
+docker exec -it container_name command
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Mini machine problem</h2>
+					</section>
+					<section>
+						<ul>
+							<li class="fragment">
+								Create your own image by making a Dockerfile derived from tutum/hello-world
+							</li>
+							<li class="fragment">
+								Add yourself as the MAINTAINER
+							</li>
+							<li class="fragment">
+								Copy a text file from your workspace to inside the container's /www folder
+							</li>
+							<li class="fragment">
+								Build and run the container and it should be accessible in your OS (Bonus points)
+							</li>
+						</ul>
+					</section>
+					<section>
+						<section>
+							<h2>Mini machine problem 2 (bonus)</h2>
+						</section>
+						<section>
+							<ul>
+								<li class="fragment">
+									While your hello world container is running, execute the 'sh' command to it via
+									<pre><code class="hljs" data-trim contenteditable>
+docker exec -it container_name sh
+									</code></pre>
+								</li>
+								<li class="fragment">
+									Traverse the www folder and change its contents...
+								</li>
+							</ul>
+						</section>
+					</section>			
+				</section>
+				<section>
+					<section>
+						<h1>
+							Multi-container management and architectures
+						</h1>
+					</section>
+					<section>
+						<h2>
+							Consider this technology stack
+						</h2>
+						<p class="fragment">React</p>
+						<p class="fragment">Java</p>
+						<p class="fragment">Redis</p>
+					</section>
+					<section>
+						<h1>How would you create their Dockerfiles?</h1>
+					</section>
+					<section>
+						<h1>React</h1>
+						<pre class="fragment"><code class="hljs" data-trim contenteditable>
+FROM node:4.5-slim
+MAINTAINER Mark Ronald Delos Santos(markrdelossantos@hotmail.com)
 
+RUN npm update -g
+
+RUN echo "cd /app; npm install; npm start" > /usr/local/bin/npm_install_at_start.sh
+ENTRYPOINT bin/bash /usr/local/bin/npm_install_at_start.sh
+						</code></pre>						
+					</section>
+					<section>
+						<h1>Java</h1>
+						<pre class="fragment"><code class="hljs" data-trim contenteditable>
+FROM tomcat:9-alpine
+MAINTAINER Mark Ronald Delos Santos(markrdelossantos@hotmail.com)
+
+COPY tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
+COPY manager.xml /usr/local/tomcat/conf/Catalina/localhost/manager.xml
+						</code></pre>
+					</section>
+					<section>
+						<h1>How about running everything without the manual labor?</h1>
+					</section>
+					<section><h1>docker-compose</h1></section>
+					<section><h2>docker-compose</h2>
+					<p class="fragment">docker-compose is a tool that allows multiple containers to be run on a single configuration file</p>
+					</section>
+					<section>
+						<pre><code class="hljs" data-trim contenteditable>
+version: '2'
+services:
+	tomcat:
+	build: ./java-restful-api/docker-files
+	ports:
+		- "8888:8080"
+	frontend:
+	build: ./react-frontend/
+	ports:
+		- "8080:8080"
+	volumes:
+		- ./react-frontend:/app
+	nginx:
+	image: nginx:1.11-alpine
+	volumes:
+		- ./nginx:/conf:ro
+	links:
+		- frontend
+	ports:
+		- "9999:9999"
+	entrypoint: nginx -c /conf/docker.conf
+	redis:
+	image: redis:3.2.5-alpine
+						</code></pre>
+					</section>
+					<section><h1>DEMO_3</h1></section>
+					<section><h2>https://github.com/markrdelossantos/DockerForDevs</h2></section>
+				</section>
 			</div>
 		</div>
-
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
 
